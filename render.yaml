@@ -1,0 +1,20 @@
+services:
+  # AI Chat App with LangChain
+  - type: web
+    name: ai-chat-weather
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn chat_app_langchain:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENWEATHERMAP_API_KEY
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: true
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_PROJECT
+        value: ai-chat-weather

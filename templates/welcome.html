@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+        .info-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>登录成功！</h1>
+        <p>欢迎来到安全区域</p>
+
+        <div class="info-box">
+            <p><strong>🎉 你已成功通过双因素认证！</strong></p>
+            <p>这个页面只有通过 Google Authenticator 验证后才能访问。</p>
+        </div>
+
+        <button class="btn" onclick="logout()">退出登录</button>
+    </div>
+
+    <script>
+        async function logout() {
+            try {
+                const response = await fetch('/logout');
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                alert('退出失败，请重试');
+            }
+        }
+    </script>
+</body>
+</html>

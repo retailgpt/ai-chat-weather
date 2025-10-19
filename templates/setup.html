@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置 Google Authenticator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .step {
+            margin: 20px 0;
+            text-align: left;
+        }
+        .step h3 {
+            color: #667eea;
+        }
+        .qr-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .secret-key {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #5568d3;
+        }
+        img {
+            max-width: 250px;
+            margin: 15px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 设置双因素认证</h1>
+
+        <div class="step">
+            <h3>步骤 1: 下载 Google Authenticator</h3>
+            <p>在手机上下载 Google Authenticator 应用</p>
+        </div>
+
+        <div class="step">
+            <h3>步骤 2: 扫描二维码</h3>
+            <div class="qr-container">
+                <img src="/qrcode" alt="QR Code">
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>步骤 3: 或手动输入密钥</h3>
+            <p>如果无法扫描二维码，可以手动输入以下密钥：</p>
+            <div class="secret-key">{{ secret }}</div>
+        </div>
+
+        <a href="/" class="btn">前往登录页面</a>
+    </div>
+</body>
+</html>
