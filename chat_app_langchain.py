@@ -10,6 +10,9 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
+# Langfuse import
+from langfuse.langchain import CallbackHandler as LangfuseCallbackHandler
+
 # 加载环境变量
 load_dotenv()
 
@@ -26,6 +29,19 @@ OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
 # LANGCHAIN_API_KEY=your_api_key
 # LANGCHAIN_PROJECT=your_project_name
 LANGSMITH_ENABLED = os.getenv('LANGCHAIN_TRACING_V2', 'false').lower() == 'true'
+
+# Langfuse 配置（可选 - 用于 LLM 应用可观测性）
+LANGFUSE_ENABLED = os.getenv('LANGFUSE_ENABLED', 'false').lower() == 'true'
+langfuse_handler = None
+
+if LANGFUSE_ENABLED:
+    try:
+        # CallbackHandler automatically reads from environment variables:
+        # LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST
+        langfuse_handler = LangfuseCallbackHandler()
+    except Exception as e:
+        print(f"⚠️  Langfuse 初始化失败: {e}")
+        LANGFUSE_ENABLED = False
 
 # 初始化 LangChain ChatAnthropic
 llm = None
@@ -139,8 +155,13 @@ def chat():
         # 转换为 LangChain 消息格式
         langchain_messages = convert_to_langchain_messages(messages)
 
+        # 准备 callbacks
+        callbacks = []
+        if langfuse_handler:
+            callbacks.append(langfuse_handler)
+
         # 调用 LangChain (带工具)
-        response = llm_with_tools.invoke(langchain_messages)
+        response = llm_with_tools.invoke(langchain_messages, config={"callbacks": callbacks})
 
         # 处理工具调用
         while response.tool_calls:
@@ -162,7 +183,7 @@ def chat():
             langchain_messages.extend(tool_messages)
 
             # 继续对话
-            response = llm_with_tools.invoke(langchain_messages)
+            response = llm_with_tools.invoke(langchain_messages, config={"callbacks": callbacks})
 
         # 提取最终文本响应
         assistant_message = response.content
@@ -221,6 +242,15 @@ if __name__ == '__main__':
     else:
         print("\n💡 提示：可以启用 LangSmith 监控 LLM 和工具调用")
         print("   在 .env 中设置: LANGCHAIN_TRACING_V2=true")
+
+    # Langfuse 状态
+    if LANGFUSE_ENABLED:
+        langfuse_host = os.getenv('LANGFUSE_HOST', 'https://cloud.langfuse.com')
+        print(f"\n✓ Langfuse 监控已启用")
+        print(f"  查看追踪: {langfuse_host}")
+    else:
+        print("\n💡 提示：可以启用 Langfuse 监控 LLM 和工具调用")
+        print("   在 .env 中设置: LANGFUSE_ENABLED=true")
 
     if DEBUG:
         print(f"\n访问地址：http://localhost:{PORT}")

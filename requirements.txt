@@ -20,3 +20,6 @@ Pillow==10.4.0
 
 # Production server
 gunicorn==21.2.0
+
+# Monitoring and Observability
+langfuse>=3.0.0
