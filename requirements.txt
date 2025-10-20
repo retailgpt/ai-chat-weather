@@ -16,7 +16,7 @@ requests==2.32.5
 # TOTP Authentication (for app.py)
 pyotp==2.9.0
 qrcode==8.2
-Pillow==10.0.0
+Pillow==10.4.0
 
 # Production server
 gunicorn==21.2.0
